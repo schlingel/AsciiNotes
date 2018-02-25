@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="de-AT">
+    <head>
+        <meta charset="UTF-8"> 
+        <title>Literatur-Notizen</title>
+        <script type="text/javascript" src="node_modules/vis/dist/vis.min.js"></script>
+        <script type="text/javascript" src="node_modules/vis/dist/vis.network.min.js"></script>
+        <script type="text/javascript" src="node_modules/vue/dist/vue.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="node_modules/vis/dist/vis.min.css">
+        
+        <style type="text/css">
+            #network {
+              width: 70%;
+              margin-left: 10%;
+              margin-right: 10%;
+              height: 800px;
+              display: inline-block;
+            }
+            code {
+              font-size: 15px;
+            }
+            .indented {
+              margin-left: 30px;
+            }
+            table {
+              border-collapse: collapse;
+              font-family: sans-serif;
+            }
+            table code {
+              background: #dddddd;
+            }
+            th, td {
+              border: 1px solid #aaaaaa;
+              text-align: center;
+              padding: 5px;
+              font-weight: normal;
+            }
+          </style>
+          
+    </head>
+
+    <body>
+        <h1>Literatur-Notizen</h1>
+        <p>Sinn dieser Notizen ist es, ein immer wachsendes <a href="http://www.lebenspfadfinder.de/2012/09/eine-frage-an-vera-f-birkenbihl-was-ist-ein-wissensnetz/">Wissensnetz</a> zu visualisieren. Mit jedem Fitzelchen neuer Inspiration aus Büchern, möchte ich dies erweitern um auch darauf zugreifen zu können wenn es nicht mehr so parat ist wie zu der Zeit wenn ich das Buch lese.</p>
+    
+        <div id="table_of_content">
+            <ol>
+                <li v-for="node in nodes"><a v-bind:href="node.url">{{ node.label }}</a></li>
+            </ol>
+        </div>
+
+        <div id="network"></div>
+    
+        <script type="text/javascript">
+            var nodeDescriptors = [
+              { id: 1, url: "public/thinking_slow_thinking_fast.html", label: 'Thinking Fast, Thinking Slow' },
+              { id: 2, url: "public/superforecasting.html", label: "Superforecasting" },
+              { id: 3, url: "public/numbers_and_narratives.html", label: 'Numbers and Narratives' },
+            ];
+            var nodes = new vis.DataSet(nodeDescriptors);
+          
+            var edges = [
+              { from: 1, to: 2, label: "liefert Grundannahme, Menschen schätzen schlecht"},
+              { from: 2, to: 3, label: "bestätigt Autor, dass es gute Schätzer gibt" },
+              { from: 1, to: 3, label: "Narrative sind System 1 - Achtung" },
+            ];
+          
+            var container = document.getElementById('network');
+            var data = {
+              nodes: nodes,
+              edges: edges
+            };
+            var options = {
+              edges: {
+                font: {
+                  size: 12
+                }
+              },
+              nodes: {
+                shape: 'box',
+                font: {
+                  bold: {
+                    color: '#0077aa'
+                  }
+                }
+              },
+              physics: {
+                enabled: false
+              }
+            };
+            var network = new vis.Network(container, data, options);
+            network.on("selectNode", function (params) {
+                if (params.nodes.length === 1) {
+                    var node = nodes.get(params.nodes[0]);
+                    window.open(node.url, '_blank');
+                }
+            });
+          </script>      
+          <script type="text/javascript" src="src/js/links_section.js"></script>    
+    </body>
+</html>
